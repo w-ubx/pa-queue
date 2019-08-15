@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Queue
+from .models import Queue, Wallet
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 
@@ -20,6 +20,12 @@ def current_number(request, queue_id):
     inspected_queue = Queue.objects.get(pk=queue_id)
 
     return HttpResponse(inspected_queue.current_number)
+
+def get_wallet(request):
+    wallet = Wallet.objects.get(user=request.user)
+    response = {'wallet_value': wallet.value}
+    
+    return HttpResponse(json.dumps(response), 'application/json')
 
 def detail(request, queue_id):
     inspected_queue = Queue.objects.get(pk=queue_id)
