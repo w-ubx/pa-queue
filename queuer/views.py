@@ -1,8 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
 from django.http import HttpResponse
-from .models import Queue, Wallet
+from .models import Queue, Wallet, UserQueue
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 
@@ -15,17 +14,6 @@ def listing(request):
     }
     return render(request, 'queuer/listing.html', context)
 
-@csrf_exempt
-def current_number(request, queue_id):
-    inspected_queue = Queue.objects.get(pk=queue_id)
-
-    return HttpResponse(inspected_queue.current_number)
-
-def get_wallet(request):
-    wallet = Wallet.objects.get(user=request.user)
-    response = {'wallet_value': wallet.value}
-    
-    return HttpResponse(json.dumps(response), 'application/json')
 
 def detail(request, queue_id):
     inspected_queue = Queue.objects.get(pk=queue_id)
@@ -34,13 +22,49 @@ def detail(request, queue_id):
     }
     return render(request, 'queuer/detail.html', context)
 
-@csrf_exempt
+
 def increment(request):
     queue_id = request.POST['queue_id']
     inspected_queue = Queue.objects.get(pk=queue_id)
     inspected_queue.get_next_in_line()
     inspected_queue.save()
     return HttpResponse(inspected_queue.current_number)
+
+
+@csrf_exempt
+def current_number(request, queue_id):
+    inspected_queue = Queue.objects.get(pk=queue_id)
+
+    return HttpResponse(inspected_queue.current_number)
+
+
+@csrf_exempt
+def get_wallet(request):
+    wallet = Wallet.objects.get(user=request.user)
+    response = {'wallet_value': wallet.value}
+
+    return HttpResponse(json.dumps(response), 'application/json')
+
+
+@csrf_exempt
+def assign_number(request):
+    queue_id = request.POST['queue_id']
+    user = request.user
+
+    queue = Queue.objects.get(id=queue_id)
+    user_queue, created = UserQueue.objects.update_or_create(
+        user=user, queue=queue,
+        defaults={
+            'number': queue.latest_assigned + 1
+        }
+    )
+
+    queue.latest_assigned += 1
+    queue.save()
+
+    response = {'assigned_number': user_queue.number}
+    return HttpResponse(json.dumps(response), 'application/json')
+
 
 @csrf_exempt
 def login(request):
