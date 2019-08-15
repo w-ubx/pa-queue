@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Queue, Wallet, UserQueue
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, logout
 
 import json
 
@@ -64,6 +64,7 @@ def get_queue(request, queue_id):
 def assign_number(request):
     queue_id = request.POST['queue_id']
     user = request.user
+    wallet = user.wallet
 
     queue = Queue.objects.get(id=queue_id)
     user_queue, created = UserQueue.objects.update_or_create(
@@ -75,11 +76,18 @@ def assign_number(request):
 
     queue.latest_assigned += 1
     queue.save()
+    response = {}
+    if wallet.value >= 3:
+        wallet.payment()
+        response['assigned_number'] = user_queue.number
+        status = 201
+    else:
+        response['assigned_number'] = user_queue.number
+        status = 400
 
-    response = {'assigned_number': user_queue.number}
-    return HttpResponse(json.dumps(response), 'application/json')
+    return HttpResponse(json.dumps(response), 'application/json', status=status)
 
-
+    
 @csrf_exempt
 def login(request):
     username = request.POST['username']
