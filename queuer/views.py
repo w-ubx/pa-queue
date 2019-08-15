@@ -38,20 +38,14 @@ def increment(request):
 
 @csrf_exempt
 def login(request):
-
     username = request.POST['username']
     password = request.POST['password']
-
     user = request.user
-
     user = authenticate(username=username, password=password)
 
     if not user:
         response = {'message': 'Invalid username/password', 'status':'error'}
-
         return HttpResponse(json.dumps(response), 'application/json')
-    
     else:
         response = {'message': 'Login Success', 'status':'success'}
-
         return HttpResponse(json.dumps(response), 'application/json')
