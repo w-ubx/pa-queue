@@ -82,7 +82,7 @@ def assign_number(request):
         response['assigned_number'] = user_queue.number
         status = 201
     else:
-        response['assigned_number'] = user_queue.number
+        response['assigned_number'] = 0
         status = 400
 
     return HttpResponse(json.dumps(response), 'application/json', status=status)

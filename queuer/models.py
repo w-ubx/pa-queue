@@ -23,7 +23,7 @@ class Wallet(models.Model):
         return self.user.username
 
     def payment(self):
-        self.value -= 2
+        self.value -= 3
         self.save()
 
 
