@@ -45,6 +45,7 @@ def get_wallet(request):
 
     return HttpResponse(json.dumps(response), 'application/json')
 
+
 @csrf_exempt
 def get_queue(request, queue_id):
     queue = Queue.objects.get(id=queue_id)
