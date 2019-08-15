@@ -20,6 +20,6 @@ import queuer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', queuer.urls),
+    path('', include('queuer.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

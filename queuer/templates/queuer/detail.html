@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    </head>
+    <body>
+        <center>PA-Q!</center>
+        {{ inspected_queue.name }}
+        <div id="current_num">{{ inspected_queue.current_number }}</div>
+        <input type="button" value="NEXT" onclick="update_number()" />
+
+        <script>
+            function update_number() {
+                $.ajax({
+                    method: "POST",
+                    url: "/api/increment/",
+                    data: {
+                        queue_id : '{{ inspected_queue.id }}',
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        ///console.log(data)
+                        $("#current_num").text(data)
+                    }
+                })
+            }
+        </script>
+    </body>
+<html>

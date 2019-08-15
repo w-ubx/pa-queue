@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+    <head>
+    </head>
+    <body>
+        <center>PA-Q!</center>
+        {% if active_queues %}
+            {% for queue in active_queues %}
+                <a href="{% url 'queuer:detail' queue.id %}">{{ queue.name }}</a>
+                <br/>
+            {% endfor %}
+        {% else %}
+            <p>No queues are available.</p>
+        {% endif %}
+    </body>
+<html>
