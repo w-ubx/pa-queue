@@ -56,6 +56,7 @@ def get_queue(request, queue_id):
     )
 
     response = {'number': user_queue.number}
+    return HttpResponse(json.dumps(response), 'application/json')
 
 
 @csrf_exempt
