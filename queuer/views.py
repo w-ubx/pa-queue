@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Queue, Wallet, UserQueue
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, logout
+from django.contrib.auth.models import User
 
 import json
 
@@ -40,7 +41,8 @@ def current_number(request, queue_id):
 
 @csrf_exempt
 def get_wallet(request):
-    wallet = Wallet.objects.get(user=request.user)
+    user = User.objects.get(username=request.GET['user_id'])
+    wallet = Wallet.objects.get(user=user)
     response = {'wallet_value': wallet.value}
 
     return HttpResponse(json.dumps(response), 'application/json')
@@ -48,9 +50,10 @@ def get_wallet(request):
 
 @csrf_exempt
 def get_queue(request, queue_id):
+    user = User.objects.get(username=request.GET['user_id'])
     queue = Queue.objects.get(id=queue_id)
     user_queue, created = UserQueue.objects.get_or_create(
-        user=request.user, queue=queue,
+        user=user, queue=queue,
         defaults={
             'number': 0
         }
@@ -63,7 +66,7 @@ def get_queue(request, queue_id):
 @csrf_exempt
 def assign_number(request):
     queue_id = request.POST['queue_id']
-    user = request.user
+    user = User.objects.get(username=request.GET['user_id'])
     wallet = user.wallet
 
     queue = Queue.objects.get(id=queue_id)
