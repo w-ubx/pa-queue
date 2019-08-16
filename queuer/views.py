@@ -55,7 +55,7 @@ def get_queue(request, queue_id):
     user_queue, created = UserQueue.objects.get_or_create(
         user=user, queue=queue,
         defaults={
-            'number': 0
+            'number': queue.latest_assigned + 1
         }
     )
 
@@ -66,8 +66,8 @@ def get_queue(request, queue_id):
 @csrf_exempt
 def assign_number(request):
     queue_id = request.POST['queue_id']
-    user = User.objects.get(username=request.GET['user_id'])
-    wallet = user.wallet
+    user = User.objects.get(username=request.POST['user_id'])
+    wallet = Wallet.objects.get(user=user)
 
     queue = Queue.objects.get(id=queue_id)
     user_queue, created = UserQueue.objects.update_or_create(
