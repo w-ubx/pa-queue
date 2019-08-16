@@ -1,7 +1,10 @@
 from django.shortcuts import render
+import base64
 
 from django.http import HttpResponse
 from .models import Queue, Wallet, UserQueue
+from face_recog.models import FaceData
+from face_recog.utils import compare_photo
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
@@ -30,6 +33,26 @@ def increment(request):
     inspected_queue.get_next_in_line()
     inspected_queue.save()
     return HttpResponse(inspected_queue.current_number)
+
+
+def compare_faces(request):
+    queue = Queue.objects.get(name=request.POST['queue_name'])
+    target = UserQueue.objects.get(queue=queue, number=queue.current_number)
+    target_face = FaceData.objects.get(user=target.user)
+
+    img_data = request.POST['image']
+    format, imgstr = img_data.split(';base64,')
+    img = base64.b64decode(imgstr)
+    filename = '/tmp/%s' % 'target_face'
+    with open(filename, 'wb') as f:
+        f.write(img)
+
+    result = compare_photo(target_face.encoded, filename)
+    if result==True:
+        queue.current_number += 1
+        queue.save()
+
+    return HttpResponse(result)
 
 
 @csrf_exempt

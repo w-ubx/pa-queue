@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-import queuer
+import queuer, face_recog
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('queuer.urls')),
+    path('kyc/', include('face_recog.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

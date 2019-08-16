@@ -11,5 +11,6 @@ urlpatterns = [
     path('get_queue/<int:queue_id>/', views.get_queue, name='get_queue'),
     path('assign_number/', views.assign_number, name='assign_number'),
     path('', views.listing, name='listing'),
+    path('compare_faces/', views.compare_faces, name='compare_faces'),
     path('login/', views.login, name='login')
 ]

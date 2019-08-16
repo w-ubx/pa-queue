@@ -1,0 +1,12 @@
+<html>
+<body>
+	<form action="{% url 'face_recognition:register_face' %}" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+	    <p>
+			<input id="id_image" type="file" class="" name="image">
+			<input type="text" name="user" placeholder="User">
+	    </p>
+	    <input type="submit" value="Submit" />
+	</form>
+</body>
+</html>

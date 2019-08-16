@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'queuer',
     'rest_framework',
+    'face_recog',
+    'blockchain'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,28 @@
+<html>
+<body>
+	<script src="/static/kyc/webcam.js"></script>
+	<div id="my_camera" style="width:320px; height:240px;"></div>
+	<h3> User Face: </h3>
+	<div id="my_base"></div>
+	<form action="{% url 'face_recog:register_face' %}" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+        <input type="hidden" id="image" name="image">
+        <input type="text" id="user" name="user">
+	    <input type="submit" value="Submit" />
+	</form>
+
+	<script language="JavaScript">
+    Webcam.attach('#my_camera');
+
+    function take_model() {
+        Webcam.snap(function(data_uri) {
+            document.getElementById('my_base').innerHTML = '<img src="' + data_uri + '"/>';
+            document.getElementById('image').value = data_uri;
+        });
+    }
+</script>
+
+<a href="javascript:void(take_model())">Take UserFace</a>
+
+</body>
+</html>
