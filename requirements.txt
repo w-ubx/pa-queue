@@ -47,7 +47,7 @@ protobuf==3.9.1
 ptyprocess==0.6.0
 py-solc==3.2.0
 pycryptodome==3.8.2
-Pygments==2.4.2
+Pygments==2.7.4
 pytesseract==0.2.9
 pytz==2019.2
 requests==2.22.0
